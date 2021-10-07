@@ -1,10 +1,11 @@
 const express = require('express');
+const verifyToken = require('../middlewares/auth');
 const Todo = require('../models/todo');
 
 const router = express.Router();
 
 // Create todo
-router.post('/', async(req, res)=>{
+router.post('/', verifyToken, async(req, res)=>{
     if(!req.body.title){
         return res.status(400).send({
             message: 'Please fill all the required fields.'
@@ -29,7 +30,7 @@ router.post('/', async(req, res)=>{
 })
 
 // Get all todos
-router.get('/', async(req, res) => {
+router.get('/', verifyToken, async(req, res) => {
     try {
         const results = await Todo.find();
         res.status(200).json(results);

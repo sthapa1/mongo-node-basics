@@ -38,10 +38,10 @@ module.exports = verifyToken;
 
 // ['Hell', ' w', 'rld']
 
-localStorage.setItem('token', token)
+// localStorage.setItem('token', token)
 
-const token = localStorage.getItem('token');
+// const token = localStorage.getItem('token');
 
 //logout
-localStorage.removeItem('token')
+// localStorage.removeItem('token')
 // redirect to login

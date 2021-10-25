@@ -6,6 +6,7 @@ const router = express.Router();
 
 // Create todo
 router.post('/', verifyToken, async(req, res)=>{
+    console.log(req.user);
     if(!req.body.title){
         return res.status(400).send({
             message: 'Please fill all the required fields.'
@@ -14,7 +15,8 @@ router.post('/', verifyToken, async(req, res)=>{
     const todo = new Todo({
         title: req.body.title,
         description: req.body.description,
-        isCompleted: req.body.isCompleted
+        isCompleted: req.body.isCompleted,
+        createdBy: req.user.user_id
     });
     try {
 
@@ -32,7 +34,7 @@ router.post('/', verifyToken, async(req, res)=>{
 // Get all todos
 router.get('/', verifyToken, async(req, res) => {
     try {
-        const results = await Todo.find();
+        const results = await Todo.find({createdBy: req.user.user_id}).populate('createdBy');
         res.status(200).json(results);
     } catch (error) {
         res.status(500).json(error);
@@ -40,7 +42,7 @@ router.get('/', verifyToken, async(req, res) => {
 })
 
 // Delete todos by id
-router.delete('/:id', async(req, res) => {
+router.delete('/:id', verifyToken, async(req, res) => {
     try {
         await Todo.findByIdAndDelete(req.params.id);
         res.status(200).json({
@@ -52,7 +54,7 @@ router.delete('/:id', async(req, res) => {
 })
 
 // Update todos
-router.put('/:id', async(req, res) => {
+router.put('/:id', verifyToken, async(req, res) => {
     try {
         await Todo.findByIdAndUpdate(req.params.id, req.body);
         res.status(200).json({
@@ -64,7 +66,7 @@ router.put('/:id', async(req, res) => {
 })
 
 // Get todo by id
-router.get('/:id', async(req, res) => {
+router.get('/:id', verifyToken, async(req, res) => {
     try {
         const result = await Todo.findById(req.params.id);
         res.status(200).json(result);

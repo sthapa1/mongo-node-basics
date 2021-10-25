@@ -5,8 +5,8 @@ const verifyToken = (req, res, next) => {
     try {
         const authHeader = req.headers.authorization;
 
-        const token = authHeader.split(' ')[1];
-        
+        const token = authHeader && authHeader.split(' ')[1];
+
         if(!token){
             return res.status(403).json({message: 'Unauthorized.'})
         }
@@ -37,3 +37,11 @@ module.exports = verifyToken;
 // a.split('o')
 
 // ['Hell', ' w', 'rld']
+
+localStorage.setItem('token', token)
+
+const token = localStorage.getItem('token');
+
+//logout
+localStorage.removeItem('token')
+// redirect to login
